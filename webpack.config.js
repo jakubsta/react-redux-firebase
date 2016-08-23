@@ -11,16 +11,17 @@ module.exports = {
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx', 'x']
+    extensions: ['', '.js', '.jsx', 'x'],
   },
   module: {
     loaders: [{
-      test: /\.jsx$/,
+      test: /\.jsx?$/,
       exclude: /(node_modules)/,
       loader: 'babel-loader',
       query: {
-        presets: ['react', 'es2015', 'stage-0']
-      }
-    }]
-  }
+        presets: ['react', 'es2015', 'stage-0'],
+        plugins: ['transform-flow-strip-types'],
+      },
+    }],
+  },
 }
