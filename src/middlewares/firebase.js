@@ -3,7 +3,7 @@
 import { initializeApp } from 'firebase';
 
 import { ActionTypes as ItemsActionTypes, setItems } from '../actions/items';
-import { ActionTypes as UserActionTypes } from '../actions/user';
+import { ActionTypes as UserActionTypes, signingUpStarted, signingUpFailure, signingUpSuccess, signingInStarted, signingInFailure, signingInSuccess } from '../actions/user';
 import config from '../../config';
 
 export default class Firebase {
@@ -40,22 +40,18 @@ export default class Firebase {
     };
   }
 
-  signUp(store, dispath, { email, password }) {
-    this.firebaseApp.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-
-      console.log(errorCode, errorMessage);
-    });
+  signUp(store, dispatch, { email, password }) {
+    dispatch(signingUpStarted());
+    this.firebaseApp.auth().createUserWithEmailAndPassword(email, password).then(
+      (user) => dispatch(signingUpSuccess(user)),
+      (error) => dispatch(signingUpFailure(error.message)));
   }
 
-  signIn(store, dispath, { email, password }) {
-    this.firebaseApp.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-
-      console.log(errorCode, errorMessage);
-    });
+  signIn(store, dispatch, { email, password }) {
+    dispatch(signingInStarted());
+    this.firebaseApp.auth().signInWithEmailAndPassword(email, password).then(
+      (user) => dispatch(signingInSuccess(user)),
+      (error) => dispatch(signingInFailure(error.message)));
   }
 
   addPost(title='', username='Admin') {
