@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 
-import { changePageSize } from '../actions/pageSize';
+import { changePageSize, changeToNextPage, changeToFirstPage } from '../actions/page';
 
 class TableOptions extends Component {
 
@@ -28,13 +28,14 @@ class TableOptions extends Component {
         <IconButton 
           {...this.defaultButtonAttributes}
           tooltip="Go to first page"
+          onClick={this.props.changeToFirstPage}
         >
           <FontIcon className="material-icons">fast_rewind</FontIcon>
         </IconButton>
         <SelectField 
           maxHeight={200}
           hintText="Page size"
-          value={this.props.pageSize}
+          value={this.props.page.size}
           onChange={::this.changePageSize}
         >
           {this.defaultOptions}
@@ -42,6 +43,7 @@ class TableOptions extends Component {
         <IconButton
           {...this.defaultButtonAttributes}
           tooltip="To next page"
+          onClick={this.props.changeToNextPage}
         >
           <FontIcon className="material-icons">skip_next</FontIcon>
         </IconButton>
@@ -51,7 +53,7 @@ class TableOptions extends Component {
 
   renderOptions() {
     const options = [];
-    for (let i = 5; i <= 50; i+=5 ) {
+    for (let i = 5; i <= 20; i+=5 ) {
       options.push(<MenuItem value={i} key={i} primaryText={i} />);
     }
 
@@ -63,10 +65,12 @@ class TableOptions extends Component {
   }
 }
 
-const mapStateToProps = ({ pageSize }) => ({ pageSize });
+const mapStateToProps = ({ page }) => ({ page });
 const mapDispatchToProps = (dispatch) => {
   return {
-    changePageSize: (pageSize) => dispatch(changePageSize(pageSize))
+    changePageSize: (pageSize) => dispatch(changePageSize(pageSize)),
+    changeToNextPage: () => dispatch(changeToNextPage()),
+    changeToFirstPage: () => dispatch(changeToFirstPage()),
   };
 };
 

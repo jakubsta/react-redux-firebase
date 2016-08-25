@@ -1,8 +1,10 @@
 // @flow
 
+import { last } from 'ramda';
 import { initializeApp } from 'firebase';
 
 import { ActionTypes as ItemsActionTypes, setPosts } from '../actions/posts';
+import { ActionTypes as PageActionTypes } from '../actions/page';
 import { ActionTypes as UserActionTypes, signingUpStarted, signingUpFailure, signingUpSuccess, signingInStarted, signingInFailure, signingInSuccess } from '../actions/user';
 import config from '../../config';
 
@@ -25,8 +27,16 @@ export default class Firebase {
             this.addPost(store, dispatch, action.payload);
             break;
 
-          case ItemsActionTypes.CHANGE_PAGE_SIZE:
+          case PageActionTypes.CHANGE_PAGE_SIZE:
             dispatch(action);
+            this.fetchPosts(store, dispatch);
+            break;
+
+          case PageActionTypes.CHANGE_TO_NEXT_PAGE:
+            this.fetchPosts(store, dispatch, true);
+            break;
+
+          case PageActionTypes.CHANGE_TO_FIRST_PAGE:
             this.fetchPosts(store, dispatch);
             break;
 
@@ -73,13 +83,17 @@ export default class Firebase {
     this.posts.update({ [newPostKey]: newPost });
   }
 
-  fetchPosts(store, dispatch) {
+  fetchPosts(store, dispatch, nextPage=false) {
     if(this.query) {
       this.query.off();
     }
-    const { posts, pageSize } = store.getState();
+    const { posts, page } = store.getState();
 
-    this.query = this.posts.orderByKey().limitToLast(pageSize);
+    if(nextPage) {
+      this.query = this.posts.orderByKey().endAt(last(posts).id).limitToLast(page.size);
+    } else {
+      this.query = this.posts.orderByKey().limitToLast(page.size);
+    }
     this.query.on('value', (items) => {
       let posts = items.val();
       if(posts === null) {

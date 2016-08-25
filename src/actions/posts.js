@@ -1,8 +1,6 @@
 // @flow
 
 export const ActionTypes = [
-  'CHANGE_PAGE_SIZE',
-  'CHANGE_PAGE',
   'ADD_POST',
   'EDIT_POST', 
   'SET_POSTS',
@@ -17,9 +15,8 @@ export function addPost (title) {
 
 export function editPost () { 
   return { type: ActionTypes.EDIT_POST };
-};
+}
 
 export function setPosts (items) {
   return { type: ActionTypes.SET_POSTS, payload: items };
-};
-
+}
