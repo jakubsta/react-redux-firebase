@@ -23,26 +23,19 @@ class UserPanel extends Component {
           <Tab label="Sign In">
             <EmailPassword 
               label="Sign In"
+              onAction={this.props.signIn}
             />
           </Tab>
           <Tab label="Sign Up">
             <EmailPassword
               label="Sign Up"
+              onAction={this.props.signUp}
             />
           </Tab>
         </Tabs>
       </Dialog>
     );  
   }
-
-  onSignUp() {
-    this.props.signUp(this.state.email, this.state.password);
-  }
-
-  onSignIn() {
-    this.props.signIn(this.state.email, this.state.password);
-  }
-
 }
 
 const mapStateToProps = ({ userPanel }) => { 

@@ -42,9 +42,9 @@ export default class EmailPassword extends Component {
   onClick() {
     this.props.onAction(this.state.email, this.state.password); 
   }
-}
 
-EmailPassword.propTypes = {
-  label: PropTypes.string.isRequired,
-  onAction: PropTypes.func.isRequired,
-};
+  static propTypes = {
+    label: PropTypes.string.isRequired,
+    onAction: PropTypes.func.isRequired,
+  }
+}

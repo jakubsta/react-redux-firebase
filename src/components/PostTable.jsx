@@ -7,6 +7,7 @@ import TimeAgo from 'react-timeago';
 
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
+import Like from './Like';
 import { editItem } from '../actions/posts';
 
 class PostTable extends Component {
@@ -18,13 +19,14 @@ class PostTable extends Component {
 
   render() {
     return (
-      <Table>
+      <Table selectable={false}>
         <TableHeader
           displaySelectAll={false}
           adjustForCheckbox={false}
         >
           <TableRow>
             {this.renderHeaders()}
+            <TableHeaderColumn />
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
@@ -43,6 +45,9 @@ class PostTable extends Component {
       return (
         <TableRow key={p.id}>
           {this.renderRow(p)}
+          <TableRowColumn>
+            <Like />
+          </TableRowColumn>
         </TableRow>
       );
     });
