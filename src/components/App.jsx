@@ -3,8 +3,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { addItem, editItem } from '../actions/items';
+import { editPost } from '../actions/posts';
 import { signUp, signIn } from '../actions/user';
+
+import TableOptions from './TableOptions';
+import PostTable from './PostTable';
+import PostAdder from './PostAdder';
 
 class App extends Component {
   constructor(props) {
@@ -32,14 +36,9 @@ class App extends Component {
       />
       <button onClick={::this.onSignUp}>Sign up</button>
       <button onClick={::this.onSignIn}>Sign in</button>
-      {this.props.items.map((item) => (<p key={item.id}>{item.title}</p>))}
-      <br/>
-      <input 
-        type="text" 
-        value={this.state.newTitle} 
-        onChange={(e) => this.setState({ newTitle: e.target.value })}
-      />
-      <button onClick={::this.onAddItem}>Click!</button>
+      <PostAdder />
+      <TableOptions />
+      <PostTable />
     </div>);
   }
 
@@ -50,22 +49,17 @@ class App extends Component {
   onSignIn() {
     this.props.signIn(this.state.email, this.state.password);
   }
-
-  onAddItem() {
-    this.props.addItem(this.state.newTitle);
-  }
 }
 
-const mapStateToProps = ({ items }) => { 
-  return { items };
+const mapStateToProps = ({}) => { 
+  return {};
 };
 
-const mapDispatchToProps = (dispath) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    signUp: (username, password) => dispath(signUp(username, password)),
-    signIn: (username, password) => dispath(signIn(username, password)),
-    addItem: (title) => dispath(addItem(title)),
-    editItem: () => dispath(editItem()),
+    signUp: (username, password) => dispatch(signUp(username, password)),
+    signIn: (username, password) => dispatch(signIn(username, password)),
+    editPost: () => dispatch(editPost()),
   }
 };
 

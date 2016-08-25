@@ -2,13 +2,13 @@
 
 import { initializeApp } from 'firebase';
 
-import { ActionTypes as ItemsActionTypes, setItems } from '../actions/items';
+import { ActionTypes as ItemsActionTypes, setPosts } from '../actions/posts';
 import { ActionTypes as UserActionTypes, signingUpStarted, signingUpFailure, signingUpSuccess, signingInStarted, signingInFailure, signingInSuccess } from '../actions/user';
 import config from '../../config';
 
 export default class Firebase {
   constructor() {
-    this.consumedActions = [ ItemsActionTypes.ADD_ITEM ];
+    this.consumedActions = [ ItemsActionTypes.ADD_POST ];
 
     this.firebaseApp = initializeApp(config);
     this.db = this.firebaseApp.database();
@@ -21,8 +21,13 @@ export default class Firebase {
 
       return (action) => {
         switch(action.type) {
-          case ItemsActionTypes.ADD_ITEM:
+          case ItemsActionTypes.ADD_POST:
             this.addPost(store, dispatch, action.payload);
+            break;
+
+          case ItemsActionTypes.CHANGE_PAGE_SIZE:
+            dispatch(action);
+            this.fetchPosts(store, dispatch);
             break;
 
           case UserActionTypes.SIGN_UP:
@@ -58,7 +63,7 @@ export default class Firebase {
     const { user } = store.getState()
     const newPost = {
       title,
-      username: user.user.email,
+      email: user.user.email,
       views: 0,
       likes: 0,
       createdAt: new Date()
@@ -69,9 +74,12 @@ export default class Firebase {
   }
 
   fetchPosts(store, dispatch) {
-    const { items } = store.getState();
+    if(this.query) {
+      this.query.off();
+    }
+    const { posts, pageSize } = store.getState();
 
-    this.query = this.posts.orderByKey().limitToLast(10);
+    this.query = this.posts.orderByKey().limitToLast(pageSize);
     this.query.on('value', (items) => {
       let posts = items.val();
       if(posts === null) {
@@ -82,7 +90,7 @@ export default class Firebase {
         }).reverse();
       }
 
-      dispatch(setItems(posts));
+      dispatch(setPosts(posts));
     });
   }
 };

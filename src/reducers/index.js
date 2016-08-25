@@ -2,12 +2,14 @@
 
 import { combineReducers } from 'redux';
 
-import items from './items';
+import posts from './posts';
 import user from './user';
+import pageSize from './pageSize';
 
 const reducer = combineReducers({
-  items,
+  posts,
   user,
+  pageSize,
 });
 
 export default reducer;
