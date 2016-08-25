@@ -1,6 +1,6 @@
 // @flow
 
-import ActionTypes from '../actions/types';
+import { ActionTypes } from '../actions/items';
 
 const items = (state=[], action) => {
   switch(action.type) {
