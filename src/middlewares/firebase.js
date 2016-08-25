@@ -22,7 +22,7 @@ export default class Firebase {
       return (action) => {
         switch(action.type) {
           case ItemsActionTypes.ADD_ITEM:
-            this.addPost(action.payload);
+            this.addPost(store, dispatch, action.payload);
             break;
 
           case UserActionTypes.SIGN_UP:
@@ -54,10 +54,11 @@ export default class Firebase {
       (error) => dispatch(signingInFailure(error.message)));
   }
 
-  addPost(title='', username='Admin') {
+  addPost(store, dispatch, title='') {
+    const { user } = store.getState()
     const newPost = {
       title,
-      username,
+      username: user.user.email,
       views: 0,
       likes: 0,
       createdAt: new Date()
