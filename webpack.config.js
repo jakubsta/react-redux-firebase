@@ -7,8 +7,9 @@ module.exports = {
     main: './index.js',
   },
   output: {
-    path: './bin',
+    path: path.resolve(__dirname, "bin"),
     filename: '[name].js',
+    publicPath: "/assets/",
   },
   resolve: {
     extensions: ['', '.js', '.jsx', 'x'],

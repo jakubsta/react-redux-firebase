@@ -1,10 +1,21 @@
 // @flow
 
-const x = (a) => Array.from(a);
-const y = (a: number) => a*2;
+import React from 'react';
+import ReactDom from 'react-dom';
 
-x('17')
-// x(17) // Error
-// y('a') // Error
+import { Provider } from 'react-redux';
+import { createStore } from 'redux'
 
-console.log('Start')
+import reducer from './src/reducers';
+import middlewares from './src/middlewares';
+
+import App from './src/components/App';
+
+const store = createStore(reducer, middlewares);
+
+ReactDom.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('app')
+);
