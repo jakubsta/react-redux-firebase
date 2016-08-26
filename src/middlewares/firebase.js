@@ -27,6 +27,10 @@ export default class Firebase {
             this.addPost(store, dispatch, action.payload);
             break;
 
+          case ItemsActionTypes.LIKE_POST:
+            this.likePost(store, action.payload);
+            break;
+
           case PageActionTypes.CHANGE_PAGE_SIZE:
             dispatch(action);
             this.fetchPosts(store, dispatch);
@@ -43,7 +47,7 @@ export default class Firebase {
           case UserActionTypes.SIGN_UP:
             this.signUp(store, dispatch, action.payload);
             break;
-  
+
           case UserActionTypes.SIGN_IN:
             this.signIn(store, dispatch, action.payload);
             break;
@@ -74,14 +78,34 @@ export default class Firebase {
     const newPost = {
       title,
       email: user.user.email,
-      views: 0,
-      likes: 0,
+      viewsCount: 0,
+      views: {},
+      likesCount: 0,
+      likes: {},
       createdAt: new Date()
     };
 
     const newPostKey = this.posts.push().key;
     this.posts.update({ [newPostKey]: newPost });
   }
+
+  likePost(store, postId) {
+    const { user } = store.getState();
+    const uid = user.user.uid;
+    this._modifyCounter(uid, 'posts', postId, 'likes',
+      (post) => {
+        post.likesCount--;
+        post.likes[uid] = null;
+      },
+      (post) => {
+        post.likesCount++;
+        if (!post.likes) {
+          post.likes = {};
+        }
+        post.likes[uid] = true;
+      });
+  }
+
 
   fetchPosts(store, dispatch, nextPage=false) {
     if(this.query) {
@@ -102,9 +126,38 @@ export default class Firebase {
         posts = Object.keys(posts).map((id) => {
           return Object.assign(posts[id], { id });
         }).reverse();
+
+        posts.forEach(({id}) => this._markAsShown(store, id));
       }
 
       dispatch(setPosts(posts));
+    });
+  }
+
+  _markAsShown(store, postId) {
+    const { user } = store.getState();
+    const uid = user.user.uid;
+    this._modifyCounter(uid, 'posts', postId, 'views',
+      () => {},
+      (post) => {
+        post.likesCount++;
+        if (!post.views) {
+          post.views = {};
+        }
+        post.views[uid] = true;
+      });
+  }
+
+  _modifyCounter(uid, collection, id, field, onDecrement, onIncrement) {
+    this.db.ref(`/${collection}/${id}`).transaction((entity) => {
+      if (entity) {
+        if (entity[`${field}Count`] && entity[field][uid]) {
+          onDecrement(entity);
+        } else {
+          onIncrement(entity);
+        }
+      }
+      return entity;
     });
   }
 };

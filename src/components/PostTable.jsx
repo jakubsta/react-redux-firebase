@@ -8,13 +8,13 @@ import TimeAgo from 'react-timeago';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 import Like from './Like';
-import { editItem } from '../actions/posts';
+import { likePost, editPost } from '../actions/posts';
 
 class PostTable extends Component {
 
   constructor(props) {
     super(props);
-    this.columnsNames = ['id', 'email', 'title', 'views', 'likes', 'createdAt'];
+    this.columnsNames = ['id', 'email', 'title', 'viewsCount', 'likesCount', 'createdAt'];
   }
 
   render() {
@@ -46,7 +46,7 @@ class PostTable extends Component {
         <TableRow key={p.id}>
           {this.renderRow(p)}
           <TableRowColumn>
-            <Like />
+            <Like onClick={this.props.likePost.bind(this, p.id)} />
           </TableRowColumn>
         </TableRow>
       );
@@ -72,7 +72,8 @@ const mapStateToProps = ({ posts, user }) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    editItem: (title) => dispatch(editItem(title)),
+    likePost: (postId) => dispatch(likePost(postId)),
+    editPost: (title) => dispatch(editPost(title)),
   };
 };
 

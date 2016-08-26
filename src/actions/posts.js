@@ -2,6 +2,7 @@
 
 export const ActionTypes = [
   'ADD_POST',
+  'LIKE_POST',
   'EDIT_POST', 
   'SET_POSTS',
 ].reduce((acc, action) => {
@@ -19,4 +20,8 @@ export function editPost () {
 
 export function setPosts (items) {
   return { type: ActionTypes.SET_POSTS, payload: items };
+}
+
+export function likePost (postId) {
+  return { type: ActionTypes.LIKE_POST, payload: postId };
 }
