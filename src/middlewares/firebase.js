@@ -1,6 +1,6 @@
 // @flow
 
-import { last } from 'ramda';
+import { last, not, compose, path } from 'ramda';
 import { initializeApp } from 'firebase';
 
 import * as PostsActions from '../actions/posts';
@@ -127,28 +127,32 @@ export default class Firebase {
       } else {
         newPosts = Object.keys(newPosts).map((id) => ({ ...newPosts[id], id })).reverse();
 
-        // newPosts.forEach(({ id }) => this.markAsShown(store, id));
+        this.markAsShown(store, newPosts);
       }
 
       dispatch(PostsActions.setPosts(newPosts));
     });
   }
 
-  markAsShown(store, postId) {
+  markAsShown(store, posts) {
     const { user } = store.getState();
     const uid = user.user.uid;
-    this.modifyCounter(uid, 'posts', postId, 'views',
-      () => {},
-      (post) => {
-        const newPost = { ...post };
-        newPost.likesCount++;
-        if (!newPost.views) {
-          newPost.views = {};
-        }
-        newPost.views[uid] = true;
 
-        return newPost;
-      });
+    posts
+      .filter(compose(not, path(['views', uid])))
+      .forEach(({ id }) => this.modifyCounter(uid, 'posts', id, 'views',
+        () => {},
+        (post) => {
+          const newPost = { ...post };
+          newPost.viewsCount++;
+          if (!newPost.views) {
+            newPost.views = {};
+          }
+          newPost.views[uid] = true;
+
+          return newPost;
+        })
+      );
   }
 
   modifyCounter(uid, collection, id, field, onDecrement, onIncrement) {
