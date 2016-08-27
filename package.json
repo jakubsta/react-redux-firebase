@@ -2,7 +2,7 @@
   "name": "table",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "index.jsx",
   "dependencies": {
     "firebase": "^3.3.0",
     "material-ui": "^0.15.4",
@@ -12,7 +12,8 @@
     "react-redux": "^4.4.5",
     "react-tap-event-plugin": "^1.0.0",
     "react-timeago": "^3.1.2",
-    "redux": "^3.5.2"
+    "redux": "^3.5.2",
+    "redux-actions": "^0.11.0"
   },
   "devDependencies": {
     "babel-core": "6.13.2",
@@ -33,7 +34,7 @@
     "webpack-dev-server": "1.15.0"
   },
   "scripts": {
-    "eslint": "eslint index.js `find ./src/ -name \"*.jsx\" -o -name \"*.js\"` || true",
+    "eslint": "eslint index.jsx `find ./src/ -name \"*.jsx\" -o -name \"*.js\"` || true",
     "start": "webpack-dev-server --inline",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "test": "echo \"Error: no test specified\" && exit 1"

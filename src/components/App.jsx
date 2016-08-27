@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import Paper from 'material-ui/Paper';
@@ -10,21 +10,19 @@ import UserPanel from './UserPanel';
 import PostTable from './PostTable';
 import PostAdder from './PostAdder';
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <UserPanel />
-        <PostAdder />
-        <Paper>
-          <TableOptions />
-          <PostTable />
-        </Paper>
-      </div>
-    );
-  }
+function App() {
+  return (
+    <div>
+      <UserPanel />
+      <PostAdder />
+      <Paper>
+        <TableOptions />
+        <PostTable />
+      </Paper>
+    </div>
+  );
 }
 
-const mapStateToProps = ({}) => ({});
+const mapStateToProps = () => ({});
 
 export default connect(mapStateToProps)(App);

@@ -1,16 +1,11 @@
 // @flow
 
-import { ActionTypes } from '../actions/posts';
+import { handleAction } from 'redux-actions';
 
-const posts = (state=[], action) => {
-  switch(action.type) {
-    case ActionTypes.SET_POSTS:
-      return action.payload;
+import { setPosts } from '../actions/posts';
 
-    default:
-      return state;
-  }
-
-};
-
-export default posts;
+export default handleAction(
+  setPosts,
+  (state, { payload }) => payload,
+  []
+);

@@ -1,27 +1,8 @@
 // @flow
 
-export const ActionTypes = [
-  'ADD_POST',
-  'LIKE_POST',
-  'EDIT_POST', 
-  'SET_POSTS',
-].reduce((acc, action) => {
-  acc[action] = action; 
-  return acc;
-}, {});
+import { createAction } from 'redux-actions';
 
-export function addPost (title) {
-  return { type: ActionTypes.ADD_POST, payload: title };
-}
-
-export function editPost () { 
-  return { type: ActionTypes.EDIT_POST };
-}
-
-export function setPosts (items) {
-  return { type: ActionTypes.SET_POSTS, payload: items };
-}
-
-export function likePost (postId) {
-  return { type: ActionTypes.LIKE_POST, payload: postId };
-}
+export const addPost = createAction('ADD_POST');
+export const editPost = createAction('EDIT_POST');
+export const setPosts = createAction('SET_POSTS');
+export const likePost = createAction('LIKE_POST');

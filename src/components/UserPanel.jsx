@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import Dialog from 'material-ui/Dialog';
@@ -9,45 +9,45 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import { switchUserPanel } from '../actions/userPanel';
 import { signUp, signIn } from '../actions/user';
 
-import EmailPassword from './EmailPassword'; 
+import EmailPassword from './EmailPassword';
 
-class UserPanel extends Component {
-
-  render() {
-    return (
-      <Dialog
-        open={this.props.userPanel.visible}
-        onRequestClose={this.props.closeUserPanel}
-      >
-        <Tabs>
-          <Tab label="Sign In">
-            <EmailPassword 
-              label="Sign In"
-              onAction={this.props.signIn}
-            />
-          </Tab>
-          <Tab label="Sign Up">
-            <EmailPassword
-              label="Sign Up"
-              onAction={this.props.signUp}
-            />
-          </Tab>
-        </Tabs>
-      </Dialog>
-    );  
-  }
+function UserPanel(props) {
+  return (
+    <Dialog
+      open={props.userPanelVisible}
+      onRequestClose={props.closeUserPanel}
+    >
+      <Tabs>
+        <Tab label="Sign In">
+          <EmailPassword
+            label="Sign In"
+            onAction={props.signIn}
+          />
+        </Tab>
+        <Tab label="Sign Up">
+          <EmailPassword
+            label="Sign Up"
+            onAction={props.signUp}
+          />
+        </Tab>
+      </Tabs>
+    </Dialog>
+  );
 }
 
-const mapStateToProps = ({ userPanel }) => { 
-  return { userPanel };
+UserPanel.propTypes = {
+  userPanelVisible: PropTypes.bool.isRequired,
+  signUp: PropTypes.func.isRequired,
+  signIn: PropTypes.func.isRequired,
+  closeUserPanel: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    signUp: (username, password) => dispatch(signUp(username, password)),
-    signIn: (username, password) => dispatch(signIn(username, password)),
-    closeUserPanel: () => dispatch(switchUserPanel(false)),
-  }
-};
+const mapStateToProps = ({ userPanel }) => ({ userPanelVisible: userPanel.visible });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPanel)
+const mapDispatchToProps = (dispatch) => ({
+  signUp: (username, password) => dispatch(signUp(username, password)),
+  signIn: (username, password) => dispatch(signIn(username, password)),
+  closeUserPanel: () => dispatch(switchUserPanel(false)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserPanel);

@@ -7,12 +7,24 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 export default class EmailPassword extends Component {
 
+  static propTypes = {
+    label: PropTypes.string.isRequired,
+    onAction: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props);
-    this.state = { 
+
+    this.state = {
       email: '',
       password: '',
     };
+
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick() {
+    this.props.onAction(this.state.email, this.state.password);
   }
 
   render() {
@@ -30,21 +42,12 @@ export default class EmailPassword extends Component {
           value={this.state.password}
           onChange={(e) => this.setState({ password: e.target.value })}
         />
-        <RaisedButton 
+        <RaisedButton
+          primary
           label={this.props.label}
-          primary={true}
-          onClick={::this.onClick} 
+          onClick={this.onClick}
         />
       </div>
     );
-  }
-
-  onClick() {
-    this.props.onAction(this.state.email, this.state.password); 
-  }
-
-  static propTypes = {
-    label: PropTypes.string.isRequired,
-    onAction: PropTypes.func.isRequired,
   }
 }

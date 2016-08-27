@@ -3,14 +3,14 @@
 import { last } from 'ramda';
 import { initializeApp } from 'firebase';
 
-import { ActionTypes as ItemsActionTypes, setPosts } from '../actions/posts';
-import { ActionTypes as PageActionTypes } from '../actions/page';
-import { ActionTypes as UserActionTypes, signingUpStarted, signingUpFailure, signingUpSuccess, signingInStarted, signingInFailure, signingInSuccess } from '../actions/user';
+import * as PostsActions from '../actions/posts';
+import * as PageActions from '../actions/page';
+import * as UserActions from '../actions/user';
 import config from '../../config';
 
 export default class Firebase {
   constructor() {
-    this.consumedActions = [ ItemsActionTypes.ADD_POST ];
+    // this.consumedActions = [ ItemsActionTypes.ADD_POST ];
 
     this.firebaseApp = initializeApp(config);
     this.db = this.firebaseApp.database();
@@ -22,33 +22,33 @@ export default class Firebase {
       this.fetchPosts(store, dispatch);
 
       return (action) => {
-        switch(action.type) {
-          case ItemsActionTypes.ADD_POST:
+        switch (action.type) {
+          case `${PostsActions.addPost}`:
             this.addPost(store, dispatch, action.payload);
             break;
 
-          case ItemsActionTypes.LIKE_POST:
+          case `${PostsActions.likePost}`:
             this.likePost(store, action.payload);
             break;
 
-          case PageActionTypes.CHANGE_PAGE_SIZE:
+          case `${PageActions.changePageSize}`:
             dispatch(action);
             this.fetchPosts(store, dispatch);
             break;
 
-          case PageActionTypes.CHANGE_TO_NEXT_PAGE:
+          case `${PageActions.changeToNextPage}`:
             this.fetchPosts(store, dispatch, true);
             break;
 
-          case PageActionTypes.CHANGE_TO_FIRST_PAGE:
+          case `${PageActions.changeToFirstPage}`:
             this.fetchPosts(store, dispatch);
             break;
 
-          case UserActionTypes.SIGN_UP:
+          case `${UserActions.signUp}`:
             this.signUp(store, dispatch, action.payload);
             break;
 
-          case UserActionTypes.SIGN_IN:
+          case `${UserActions.signIn}`:
             this.signIn(store, dispatch, action.payload);
             break;
 
@@ -60,21 +60,21 @@ export default class Firebase {
   }
 
   signUp(store, dispatch, { email, password }) {
-    dispatch(signingUpStarted());
+    dispatch(UserActions.signingUpStarted());
     this.firebaseApp.auth().createUserWithEmailAndPassword(email, password).then(
-      (user) => dispatch(signingUpSuccess(user)),
-      (error) => dispatch(signingUpFailure(error.message)));
+      (user) => dispatch(UserActions.signingUpSuccess(user)),
+      (error) => dispatch(UserActions.signingUpFailure(error.message)));
   }
 
   signIn(store, dispatch, { email, password }) {
-    dispatch(signingInStarted());
+    dispatch(UserActions.signingInStarted());
     this.firebaseApp.auth().signInWithEmailAndPassword(email, password).then(
-      (user) => dispatch(signingInSuccess(user)),
-      (error) => dispatch(signingInFailure(error.message)));
+      (user) => dispatch(UserActions.signingInSuccess(user)),
+      (error) => dispatch(UserActions.signingInFailure(error.message)));
   }
 
-  addPost(store, dispatch, title='') {
-    const { user } = store.getState()
+  addPost(store, dispatch, title = '') {
+    const { user } = store.getState();
     const newPost = {
       title,
       email: user.user.email,
@@ -82,7 +82,7 @@ export default class Firebase {
       views: {},
       likesCount: 0,
       likes: {},
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     const newPostKey = this.posts.push().key;
@@ -92,72 +92,77 @@ export default class Firebase {
   likePost(store, postId) {
     const { user } = store.getState();
     const uid = user.user.uid;
-    this._modifyCounter(uid, 'posts', postId, 'likes',
+    this.modifyCounter(uid, 'posts', postId, 'likes',
       (post) => {
-        post.likesCount--;
-        post.likes[uid] = null;
+        const newPost = { ...post };
+        newPost.likesCount--;
+        newPost.likes[uid] = null;
+
+        return newPost;
       },
       (post) => {
-        post.likesCount++;
-        if (!post.likes) {
-          post.likes = {};
+        const newPost = { ...post };
+        newPost.likesCount++;
+        if (!newPost.likes) {
+          newPost.likes = {};
         }
-        post.likes[uid] = true;
+        newPost.likes[uid] = true;
+
+        return newPost;
       });
   }
 
-
-  fetchPosts(store, dispatch, nextPage=false) {
-    if(this.query) {
+  fetchPosts(store, dispatch, nextPage = false) {
+    if (this.query) {
       this.query.off();
     }
     const { posts, page } = store.getState();
 
-    if(nextPage) {
+    if (nextPage) {
       this.query = this.posts.orderByKey().endAt(last(posts).id).limitToLast(page.size);
     } else {
       this.query = this.posts.orderByKey().limitToLast(page.size);
     }
-    this.query.on('value', (items) => {
-      let posts = items.val();
-      if(posts === null) {
-        posts = []
+    this.query.on('value', (snapshot) => {
+      let newPosts = snapshot.val();
+      if (newPosts === null) {
+        newPosts = [];
       } else {
-        posts = Object.keys(posts).map((id) => {
-          return Object.assign(posts[id], { id });
-        }).reverse();
+        newPosts = Object.keys(newPosts).map((id) => ({ ...newPosts[id], id })).reverse();
 
-        posts.forEach(({id}) => this._markAsShown(store, id));
+        // newPosts.forEach(({ id }) => this.markAsShown(store, id));
       }
 
-      dispatch(setPosts(posts));
+      dispatch(PostsActions.setPosts(newPosts));
     });
   }
 
-  _markAsShown(store, postId) {
+  markAsShown(store, postId) {
     const { user } = store.getState();
     const uid = user.user.uid;
-    this._modifyCounter(uid, 'posts', postId, 'views',
+    this.modifyCounter(uid, 'posts', postId, 'views',
       () => {},
       (post) => {
-        post.likesCount++;
-        if (!post.views) {
-          post.views = {};
+        const newPost = { ...post };
+        newPost.likesCount++;
+        if (!newPost.views) {
+          newPost.views = {};
         }
-        post.views[uid] = true;
+        newPost.views[uid] = true;
+
+        return newPost;
       });
   }
 
-  _modifyCounter(uid, collection, id, field, onDecrement, onIncrement) {
+  modifyCounter(uid, collection, id, field, onDecrement, onIncrement) {
     this.db.ref(`/${collection}/${id}`).transaction((entity) => {
       if (entity) {
         if (entity[`${field}Count`] && entity[field][uid]) {
-          onDecrement(entity);
-        } else {
-          onIncrement(entity);
+          return onDecrement(entity);
         }
+        return onIncrement(entity);
       }
       return entity;
     });
   }
-};
+}

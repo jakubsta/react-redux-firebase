@@ -1,13 +1,11 @@
 // @flow
 
-import { ActionTypes } from '../actions/userPanel';
+import { handleAction } from 'redux-actions';
 
-const userPanel = (state={ visible: false }, action) => {
-  if(action.type === ActionTypes.SWITCH_USER_PANEL) {
-    return { visible: action.payload };
-  }
+import { switchUserPanel } from '../actions/userPanel';
 
-  return state;
-};
-
-export default userPanel; 
+export default handleAction(
+  switchUserPanel,
+  (state, { payload }) => ({ visible: payload }),
+  { visible: false }
+);

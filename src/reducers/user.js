@@ -1,6 +1,8 @@
 // @flow
 
-import { ActionTypes } from '../actions/user';
+import { handleActions } from 'redux-actions';
+
+import * as UserActions from '../actions/user';
 
 const defaultState = Object.freeze({
   signingUp: false,
@@ -9,29 +11,12 @@ const defaultState = Object.freeze({
   error: null,
 });
 
-const user = (state=defaultState, action) => {
-  switch(action.type) {
-    case ActionTypes.SIGNING_UP_STARTED:
-      return Object.assign({}, defaultState, { signingUp: true });
+export default handleActions({
+  [UserActions.signingUpStarted]: () => ({ ...defaultState, signingUp: true }),
+  [UserActions.signingUpFailure]: (state, { payload }) => ({ ...defaultState, error: payload }),
+  [UserActions.signingUpSuccess]: (state, { payload }) => ({ ...defaultState, user: payload }),
 
-    case ActionTypes.SIGNING_UP_SUCCESS:
-      return Object.assign({}, defaultState, { user: action.payload });
-
-    case ActionTypes.SIGNING_UP_FAILURE:
-      return Object.assign({}, defaultState, { error: action.payload });
-
-    case ActionTypes.SIGNING_IN_STARTED:
-      return Object.assign({}, defaultState, { signingIn: true });
-
-    case ActionTypes.SIGNING_IN_SUCCESS:
-      return Object.assign({}, defaultState, { user: action.payload });
-
-    case ActionTypes.SIGNING_IN_FAILURE:
-      return Object.assign({}, defaultState, { error: action.payload });
-
-    default:
-      return state;
-  }
-};
-
-export default user;
+  [UserActions.signingInStarted]: () => ({ ...defaultState, signingIn: true }),
+  [UserActions.signingInFailure]: (state, { payload }) => ({ ...defaultState, error: payload }),
+  [UserActions.signingInSuccess]: (state, { payload }) => ({ ...defaultState, user: payload }),
+}, defaultState);

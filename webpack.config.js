@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   devtool: 'inline-source-map',
   entry: {
-    main: './index.js',
+    main: './index.jsx',
   },
   output: {
     path: path.resolve(__dirname, "bin"),
