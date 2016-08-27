@@ -22,23 +22,33 @@ class PostAdder extends Component {
 
     this.addPost = this.addPost.bind(this);
     this.onValueChange = this.onValueChange.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   onValueChange(e) {
     this.setState({ newTitle: e.target.value });
   }
 
+  onKeyDown(e) {
+    if (e.keyCode === 13) {
+      this.addPost();
+    }
+  }
+
   addPost() {
     this.props.addPost(this.state.newTitle);
+    this.setState({ newTitle: ''});
   }
 
   render() {
     return (
       <div>
+        <h4>Hi {this.props.user.email}</h4>
         <TextField
           hintText="Post title"
           value={this.state.newTitle}
           onChange={this.onValueChange}
+          onKeyDown={this.onKeyDown}
         />
         <RaisedButton
           primary
@@ -50,7 +60,7 @@ class PostAdder extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => ({
+const mapStateToProps = ({ user: { user } }) => ({
   user,
 });
 const mapDispatchToProps = (dispatch) => ({

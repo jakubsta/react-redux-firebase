@@ -21,10 +21,27 @@ export default class EmailPassword extends Component {
     };
 
     this.onClick = this.onClick.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.updateEmail = this.updateEmail.bind(this);
+    this.updatePassword = this.updatePassword.bind(this);
   }
 
   onClick() {
     this.props.onAction(this.state.email, this.state.password);
+  }
+
+  onKeyDown(e) {
+    if (e.keyCode === 13) {
+      this.onClick();
+    }
+  }
+
+  updateEmail(e) {
+    this.setState({ email: e.target.value });
+  }
+
+  updatePassword(e) {
+    this.setState({ password: e.target.value });
   }
 
   render() {
@@ -34,13 +51,14 @@ export default class EmailPassword extends Component {
           type="text"
           hintText="Email"
           value={this.state.email}
-          onChange={(e) => this.setState({ email: e.target.value })}
+          onChange={this.updateEmail}
         />
         <TextField
           type="password"
           hintText="Password"
           value={this.state.password}
-          onChange={(e) => this.setState({ password: e.target.value })}
+          onChange={this.updatePassword}
+          onKeyDown={this.onKeyDown}
         />
         <RaisedButton
           primary
