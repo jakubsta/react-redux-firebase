@@ -1,5 +1,7 @@
 // @flow
 
+import { path } from 'ramda';
+
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -50,7 +52,10 @@ class PostTable extends Component {
       >
         {this.renderRow(p)}
         <TableRowColumn>
-          <Like onClick={this.props.likePost.bind(this, p.id)} />
+          <Like
+            up={!path(['likes', this.props.user.uid], p)}
+            onClick={this.props.likePost.bind(this, p.id)}
+          />
         </TableRowColumn>
       </TableRow>
     ));
