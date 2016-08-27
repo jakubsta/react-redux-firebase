@@ -37,7 +37,7 @@ class PostAdder extends Component {
 
   addPost() {
     this.props.addPost(this.state.newTitle);
-    this.setState({ newTitle: ''});
+    this.setState({ newTitle: '' });
   }
 
   render() {

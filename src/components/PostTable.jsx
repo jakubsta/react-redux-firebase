@@ -9,18 +9,23 @@ import { Table, TableBody, TableHeader,
   TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 import Like from './Like';
-import { likePost, editPost } from '../actions/posts';
+import { likePost, editPost, fetchPostsIfNotAvailable } from '../actions/posts';
 
 class PostTable extends Component {
 
   static propTypes = {
     posts: PropTypes.array.isRequired,
     likePost: PropTypes.func.isRequired,
+    fetchPosts: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.columnsNames = ['id', 'email', 'title', 'viewsCount', 'likesCount', 'createdAt'];
+  }
+
+  componentWillMount() {
+    this.props.fetchPosts();
   }
 
   renderRow(post) {
@@ -76,6 +81,7 @@ const mapStateToProps = ({ posts }) => ({ posts });
 const mapDispatchToProps = (dispatch) => ({
   likePost: (postId) => dispatch(likePost(postId)),
   editPost: (title) => dispatch(editPost(title)),
+  fetchPosts: () => dispatch(fetchPostsIfNotAvailable()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostTable);

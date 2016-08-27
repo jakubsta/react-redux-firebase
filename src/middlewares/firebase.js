@@ -10,52 +10,49 @@ import config from '../../config';
 
 export default class Firebase {
   constructor() {
-    // this.consumedActions = [ ItemsActionTypes.ADD_POST ];
-
     this.firebaseApp = initializeApp(config);
     this.db = this.firebaseApp.database();
     this.posts = this.db.ref('/posts');
   }
 
   toMiddleware() {
-    return (store) => (dispatch) => {
-      this.fetchPosts(store, dispatch);
+    return (store) => (dispatch) => (action) => {
+      switch (action.type) {
+        case `${PostsActions.fetchPostsIfNotAvailable}`:
+          this.fetchPosts(store, dispatch);
+          break;
+        case `${PostsActions.addPost}`:
+          this.addPost(store, dispatch, action.payload);
+          break;
 
-      return (action) => {
-        switch (action.type) {
-          case `${PostsActions.addPost}`:
-            this.addPost(store, dispatch, action.payload);
-            break;
+        case `${PostsActions.likePost}`:
+          this.likePost(store, action.payload);
+          break;
 
-          case `${PostsActions.likePost}`:
-            this.likePost(store, action.payload);
-            break;
+        case `${PageActions.changePageSize}`:
+          dispatch(action);
+          this.fetchPosts(store, dispatch);
+          break;
 
-          case `${PageActions.changePageSize}`:
-            dispatch(action);
-            this.fetchPosts(store, dispatch);
-            break;
+        case `${PageActions.changeToNextPage}`:
+          this.fetchPosts(store, dispatch, true);
+          break;
 
-          case `${PageActions.changeToNextPage}`:
-            this.fetchPosts(store, dispatch, true);
-            break;
+        case `${PageActions.changeToFirstPage}`:
+          this.fetchPosts(store, dispatch);
+          break;
 
-          case `${PageActions.changeToFirstPage}`:
-            this.fetchPosts(store, dispatch);
-            break;
+        case `${UserActions.signUp}`:
+          this.signUp(store, dispatch, action.payload);
+          break;
 
-          case `${UserActions.signUp}`:
-            this.signUp(store, dispatch, action.payload);
-            break;
+        case `${UserActions.signIn}`:
+          this.signIn(store, dispatch, action.payload);
+          break;
 
-          case `${UserActions.signIn}`:
-            this.signIn(store, dispatch, action.payload);
-            break;
-
-          default:
-            dispatch(action);
-        }
-      };
+        default:
+          dispatch(action);
+      }
     };
   }
 

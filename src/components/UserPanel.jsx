@@ -23,7 +23,7 @@ function UserPanel(props) {
             label="Sign In"
             onAction={props.signIn}
           />
-          {props.signingIn ?  <LinearProgress mode="indeterminate" /> : null}
+          {props.signingIn ? <LinearProgress mode="indeterminate" /> : null}
         </Tab>
         <Tab label="Sign Up">
           <h4>{props.signingUpError}</h4>
@@ -31,7 +31,7 @@ function UserPanel(props) {
             label="Sign Up"
             onAction={props.signUp}
           />
-          {props.signingUp ?  <LinearProgress mode="indeterminate" /> : null}
+          {props.signingUp ? <LinearProgress mode="indeterminate" /> : null}
         </Tab>
       </Tabs>
     </Dialog>
