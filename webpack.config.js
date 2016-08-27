@@ -23,6 +23,9 @@ module.exports = {
         presets: ['react', 'es2015', 'stage-0'],
         plugins: ['transform-flow-strip-types'],
       },
+    }, {
+      test: /\.scss$/,
+      loaders: ['style', 'css', 'sass']
     }],
   },
 }

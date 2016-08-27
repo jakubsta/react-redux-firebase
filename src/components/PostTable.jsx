@@ -15,6 +15,7 @@ class PostTable extends Component {
 
   static propTypes = {
     posts: PropTypes.array.isRequired,
+    user: PropTypes.object.isRequired,
     likePost: PropTypes.func.isRequired,
     fetchPosts: PropTypes.func.isRequired,
   }
@@ -43,7 +44,10 @@ class PostTable extends Component {
 
   renderRows() {
     return this.props.posts.map((p) => (
-      <TableRow key={p.id}>
+      <TableRow
+        key={p.id}
+        className={this.props.user.email === p.email ? 'my-post': ''}
+      >
         {this.renderRow(p)}
         <TableRowColumn>
           <Like onClick={this.props.likePost.bind(this, p.id)} />
@@ -76,7 +80,10 @@ class PostTable extends Component {
   }
 }
 
-const mapStateToProps = ({ posts }) => ({ posts });
+const mapStateToProps = ({ posts, user }) => ({ 
+  posts,
+  user: user.user,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   likePost: (postId) => dispatch(likePost(postId)),
