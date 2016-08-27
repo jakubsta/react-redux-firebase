@@ -31,6 +31,6 @@ App.propTypes = {
   user: PropTypes.object,
 };
 
-const mapStateToProps = ({ user: { user } }) => ({ user });
+const mapStateToProps = ({ auth: { user } }) => ({ user });
 
 export default connect(mapStateToProps)(App);

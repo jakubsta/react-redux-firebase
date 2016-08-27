@@ -7,7 +7,7 @@ import Dialog from 'material-ui/Dialog';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import LinearProgress from 'material-ui/LinearProgress';
 
-import { signUp, signIn } from '../actions/user';
+import { signUp, signIn } from '../actions/auth';
 
 import EmailPassword from './EmailPassword';
 
@@ -53,12 +53,12 @@ UserPanel.propTypes = {
   signingInError: PropTypes.string,
 };
 
-const mapStateToProps = ({ user }) => ({
-  signingUp: user.signingUp,
-  signingIn: user.signingIn,
-  signingInError: user.signingInError,
-  signingUpError: user.signingUpError,
-  userPanelVisible: user.user === null,
+const mapStateToProps = ({ auth }) => ({
+  signingUp: auth.signingUp,
+  signingIn: auth.signingIn,
+  signingInError: auth.signingInError,
+  signingUpError: auth.signingUpError,
+  userPanelVisible: auth.user === null,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -85,9 +85,9 @@ class PostTable extends Component {
   }
 }
 
-const mapStateToProps = ({ posts, user }) => ({
+const mapStateToProps = ({ posts, auth: { user } }) => ({
   posts,
-  user: user.user,
+  user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

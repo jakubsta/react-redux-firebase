@@ -3,12 +3,12 @@
 import { combineReducers } from 'redux';
 
 import posts from './posts';
-import user from './user';
+import auth from './auth';
 import page from './page';
 
 const reducer = combineReducers({
   posts,
-  user,
+  auth,
   page,
 });
 

@@ -60,7 +60,7 @@ class PostAdder extends Component {
   }
 }
 
-const mapStateToProps = ({ user: { user } }) => ({
+const mapStateToProps = ({ auth: { user } }) => ({
   user,
 });
 const mapDispatchToProps = (dispatch) => ({

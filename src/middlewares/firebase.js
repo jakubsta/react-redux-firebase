@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase';
 
 import * as PostsActions from '../actions/posts';
 import * as PageActions from '../actions/page';
-import * as UserActions from '../actions/user';
+import * as AuthActions from '../actions/auth';
 import config from '../../config';
 
 export default class Firebase {
@@ -42,11 +42,11 @@ export default class Firebase {
           this.fetchPosts(store, dispatch);
           break;
 
-        case `${UserActions.signUp}`:
+        case `${AuthActions.signUp}`:
           this.signUp(store, dispatch, action.payload);
           break;
 
-        case `${UserActions.signIn}`:
+        case `${AuthActions.signIn}`:
           this.signIn(store, dispatch, action.payload);
           break;
 
@@ -57,24 +57,24 @@ export default class Firebase {
   }
 
   signUp(store, dispatch, { email, password }) {
-    dispatch(UserActions.signingUpStarted());
+    dispatch(AuthActions.signingUpStarted());
     this.firebaseApp.auth().createUserWithEmailAndPassword(email, password).then(
-      (user) => dispatch(UserActions.signingUpSuccess(user)),
-      (error) => dispatch(UserActions.signingUpFailure(error.message)));
+      (user) => dispatch(AuthActions.signingUpSuccess(user)),
+      (error) => dispatch(AuthActions.signingUpFailure(error.message)));
   }
 
   signIn(store, dispatch, { email, password }) {
-    dispatch(UserActions.signingInStarted());
+    dispatch(AuthActions.signingInStarted());
     this.firebaseApp.auth().signInWithEmailAndPassword(email, password).then(
-      (user) => dispatch(UserActions.signingInSuccess(user)),
-      (error) => dispatch(UserActions.signingInFailure(error.message)));
+      (user) => dispatch(AuthActions.signingInSuccess(user)),
+      (error) => dispatch(AuthActions.signingInFailure(error.message)));
   }
 
   addPost(store, dispatch, title = '') {
-    const { user } = store.getState();
+    const { auth } = store.getState();
     const newPost = {
       title,
-      email: user.user.email,
+      email: auth.user.email,
       viewsCount: 0,
       views: {},
       likesCount: 0,
@@ -87,8 +87,8 @@ export default class Firebase {
   }
 
   likePost(store, postId) {
-    const { user } = store.getState();
-    const uid = user.user.uid;
+    const { auth } = store.getState();
+    const uid = auth.user.uid;
     this.modifyCounter(uid, 'posts', postId, 'likes',
       (post) => {
         const newPost = { ...post };
@@ -135,8 +135,8 @@ export default class Firebase {
   }
 
   markAsShown(store, posts) {
-    const { user } = store.getState();
-    const uid = user.user.uid;
+    const { auth } = store.getState();
+    const uid = auth.user.uid;
 
     posts
       .filter(compose(not, path(['views', uid])))
