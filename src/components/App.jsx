@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import Paper from 'material-ui/Paper';
@@ -10,19 +10,27 @@ import UserPanel from './UserPanel';
 import PostTable from './PostTable';
 import PostAdder from './PostAdder';
 
-function App() {
-  return (
-    <div>
-      <UserPanel />
-      <PostAdder />
-      <Paper>
-        <TableOptions />
-        <PostTable />
-      </Paper>
-    </div>
-  );
+function App(props) {
+  if (props.user !== null) {
+    return (
+      <div>
+        <UserPanel />
+        <Paper>
+          <PostAdder />
+          <TableOptions />
+          <PostTable />
+        </Paper>
+      </div>
+    );
+  }
+
+  return (<UserPanel />);
 }
 
-const mapStateToProps = () => ({});
+App.propTypes = {
+  user: PropTypes.object,
+};
+
+const mapStateToProps = ({ user: { user } }) => ({ user });
 
 export default connect(mapStateToProps)(App);

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import Dialog from 'material-ui/Dialog';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
-import { switchUserPanel } from '../actions/userPanel';
 import { signUp, signIn } from '../actions/user';
 
 import EmailPassword from './EmailPassword';
@@ -15,16 +14,17 @@ function UserPanel(props) {
   return (
     <Dialog
       open={props.userPanelVisible}
-      onRequestClose={props.closeUserPanel}
     >
       <Tabs>
         <Tab label="Sign In">
+          <h4>{props.signingInError}</h4>
           <EmailPassword
             label="Sign In"
             onAction={props.signIn}
           />
         </Tab>
         <Tab label="Sign Up">
+          <h4>{props.signingUpError}</h4>
           <EmailPassword
             label="Sign Up"
             onAction={props.signUp}
@@ -38,16 +38,20 @@ function UserPanel(props) {
 UserPanel.propTypes = {
   userPanelVisible: PropTypes.bool.isRequired,
   signUp: PropTypes.func.isRequired,
+  signingUpError: PropTypes.string,
   signIn: PropTypes.func.isRequired,
-  closeUserPanel: PropTypes.func.isRequired,
+  signingInError: PropTypes.string,
 };
 
-const mapStateToProps = ({ userPanel }) => ({ userPanelVisible: userPanel.visible });
+const mapStateToProps = ({ user: { signingUpError, signingInError, user } }) => ({
+  signingInError,
+  signingUpError,
+  userPanelVisible: user === null,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   signUp: (username, password) => dispatch(signUp(username, password)),
   signIn: (username, password) => dispatch(signIn(username, password)),
-  closeUserPanel: () => dispatch(switchUserPanel(false)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserPanel);

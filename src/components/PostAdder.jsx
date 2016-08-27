@@ -3,19 +3,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import { addPost } from '../actions/posts';
-import { switchUserPanel } from '../actions/userPanel';
 
 class PostAdder extends Component {
 
   static propTypes = {
-    user: PropTypes.func.object,
+    user: PropTypes.object,
     addPost: PropTypes.func.isRequired,
-    openUserPanel: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -36,40 +33,28 @@ class PostAdder extends Component {
   }
 
   render() {
-    if (this.props.user.user) {
-      return (
-        <Paper>
-          <TextField
-            hintText="Post title"
-            value={this.state.newTitle}
-            onChange={this.onValueChange}
-          />
-          <RaisedButton
-            primary
-            label="Add"
-            onClick={this.addPost}
-          />
-        </Paper>
-      );
-    }
     return (
-      <Paper>
+      <div>
+        <TextField
+          hintText="Post title"
+          value={this.state.newTitle}
+          onChange={this.onValueChange}
+        />
         <RaisedButton
           primary
-          label="Sign In/Up"
-          onClick={this.props.openUserPanel}
+          label="Add"
+          onClick={this.addPost}
         />
-        <b>You have to sign in to add a post</b>
-      </Paper>
+      </div>
     );
   }
-
 }
 
-const mapStateToProps = ({ user }) => ({ user });
+const mapStateToProps = ({ user }) => ({
+  user,
+});
 const mapDispatchToProps = (dispatch) => ({
   addPost: (title) => dispatch(addPost(title)),
-  openUserPanel: () => dispatch(switchUserPanel(true)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostAdder);
