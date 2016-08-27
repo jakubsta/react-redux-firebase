@@ -15,7 +15,7 @@ function App(props) {
     return (
       <div>
         <UserPanel />
-        <Paper>
+        <Paper className="table-container">
           <PostAdder />
           <TableOptions />
           <PostTable />

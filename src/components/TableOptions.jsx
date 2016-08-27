@@ -42,7 +42,7 @@ class TableOptions extends Component {
 
   render() {
     return (
-      <div>
+      <div className="table-options">
         <IconButton
           {...this.defaultButtonAttributes}
           tooltip="Go to first page"
@@ -55,6 +55,7 @@ class TableOptions extends Component {
           hintText="Page size"
           value={this.props.pageSize}
           onChange={this.changePageSize}
+          style={{ width: '100px', textAlign: 'center' }}
         >
           {this.defaultOptions}
         </SelectField>

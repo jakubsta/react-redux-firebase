@@ -1,5 +1,18 @@
-$my-post-color: #333;
+$my-post-color: #00bcd4;
 
-.my-post {
-  background-color: $my-post-color;
+.user-tab {
+  padding: 10px;
+}
+
+.table-container {
+  padding: 10px; 
+
+  .table-options {
+    display: flex;
+    justify-content: center;
+  }
+
+  .my-post {
+    background-color: $my-post-color;
+  }
 }

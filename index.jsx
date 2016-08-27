@@ -1,7 +1,5 @@
 // @flow
 
-import './style/main.scss';
-
 import React from 'react';
 import ReactDom from 'react-dom';
 
@@ -10,6 +8,8 @@ import { Provider } from 'react-redux';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import './style/main.scss';
 
 import reducer from './src/reducers';
 import middlewares from './src/middlewares';

@@ -15,23 +15,28 @@ function UserPanel(props) {
   return (
     <Dialog
       open={props.userPanelVisible}
+      bodyStyle={{padding: 0}}
     >
       <Tabs>
         <Tab label="Sign In">
-          <h4>{props.signingInError}</h4>
-          <EmailPassword
-            label="Sign In"
-            onAction={props.signIn}
-          />
-          {props.signingIn ? <LinearProgress mode="indeterminate" /> : null}
+          <div className="user-tab">
+            {props.signingIn ? <LinearProgress mode="indeterminate" /> : null}
+            <h4>{props.signingInError}</h4>
+            <EmailPassword
+              label="Sign In"
+              onAction={props.signIn}
+            />
+          </div>
         </Tab>
         <Tab label="Sign Up">
-          <h4>{props.signingUpError}</h4>
-          <EmailPassword
-            label="Sign Up"
-            onAction={props.signUp}
-          />
-          {props.signingUp ? <LinearProgress mode="indeterminate" /> : null}
+          <div className="user-tab">
+            {props.signingUp ? <LinearProgress mode="indeterminate" /> : null}
+            <h4>{props.signingUpError}</h4>
+            <EmailPassword
+              label="Sign Up"
+              onAction={props.signUp}
+            />
+          </div>
         </Tab>
       </Tabs>
     </Dialog>

@@ -46,7 +46,7 @@ class PostTable extends Component {
     return this.props.posts.map((p) => (
       <TableRow
         key={p.id}
-        className={this.props.user.email === p.email ? 'my-post': ''}
+        className={this.props.user.email === p.email ? 'my-post' : ''}
       >
         {this.renderRow(p)}
         <TableRowColumn>
@@ -80,7 +80,7 @@ class PostTable extends Component {
   }
 }
 
-const mapStateToProps = ({ posts, user }) => ({ 
+const mapStateToProps = ({ posts, user }) => ({
   posts,
   user: user.user,
 });
