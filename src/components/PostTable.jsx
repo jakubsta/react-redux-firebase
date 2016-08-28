@@ -1,17 +1,12 @@
 // @flow
 
-import { path } from 'ramda';
-
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import TimeAgo from 'react-timeago';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 
-import { Table, TableBody, TableHeader,
-  TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-
-import Like from './Like';
 import { likePost, editPost, fetchPostsIfNotAvailable } from '../actions/posts';
+import PostTableRow from './PostTableRow';
 
 class PostTable extends Component {
 
@@ -31,33 +26,15 @@ class PostTable extends Component {
     this.props.fetchPosts();
   }
 
-  renderRow(post) {
-    return this.columnsNames.map((c, i) => {
-      if (c === 'createdAt') {
-        return (
-          <TableRowColumn key={i}>
-            <TimeAgo date={post[c]} />
-          </TableRowColumn>
-        );
-      }
-      return (<TableRowColumn key={i}>{post[c]}</TableRowColumn>);
-    });
-  }
-
   renderRows() {
     return this.props.posts.map((p) => (
-      <TableRow
+      <PostTableRow
+        post={p}
         key={p.id}
-        className={this.props.user.email === p.email ? 'my-post' : ''}
-      >
-        {this.renderRow(p)}
-        <TableRowColumn>
-          <Like
-            up={!path(['likes', this.props.user.uid], p)}
-            onClick={this.props.likePost.bind(this, p.id)}
-          />
-        </TableRowColumn>
-      </TableRow>
+        user={this.props.user}
+        likePost={this.props.likePost}
+        columnsNames={this.columnsNames}
+      />
     ));
   }
 
