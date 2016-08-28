@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 
-import { likePost, editPost, fetchPostsIfNotAvailable } from '../actions/posts';
+import { editPost } from '../actions/edit';
+import { likePost, fetchPostsIfNotAvailable } from '../actions/posts';
 import PostTableRow from './PostTableRow';
 
 class PostTable extends Component {
@@ -14,6 +15,7 @@ class PostTable extends Component {
     posts: PropTypes.array.isRequired,
     user: PropTypes.object.isRequired,
     likePost: PropTypes.func.isRequired,
+    editPost: PropTypes.func.isRequired,
     fetchPosts: PropTypes.func.isRequired,
   }
 
@@ -33,6 +35,7 @@ class PostTable extends Component {
         key={p.id}
         user={this.props.user}
         likePost={this.props.likePost}
+        editPost={this.props.editPost}
         columnsNames={this.columnsNames}
       />
     ));
@@ -69,7 +72,7 @@ const mapStateToProps = ({ posts, auth: { user } }) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   likePost: (postId) => dispatch(likePost(postId)),
-  editPost: (title) => dispatch(editPost(title)),
+  editPost: (post) => dispatch(editPost(post)),
   fetchPosts: () => dispatch(fetchPostsIfNotAvailable()),
 });
 

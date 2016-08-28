@@ -6,6 +6,7 @@ import { initializeApp } from 'firebase';
 import * as PostsActions from '../actions/posts';
 import * as PageActions from '../actions/page';
 import * as AuthActions from '../actions/auth';
+import * as EditActions from '../actions/edit';
 import config from '../../config';
 
 export default class Firebase {
@@ -27,6 +28,11 @@ export default class Firebase {
 
         case `${PostsActions.likePost}`:
           this.likePost(store, action.payload);
+          break;
+
+        case `${EditActions.saveEditedPost}`:
+          dispatch(action);
+          this.saveEditedPost(action.payload);
           break;
 
         case `${PageActions.changePageSize}`:
@@ -84,6 +90,11 @@ export default class Firebase {
 
     const newPostKey = this.posts.push().key;
     this.posts.update({ [newPostKey]: newPost });
+  }
+
+  saveEditedPost(editedPost) {
+    const { id, title } = editedPost;
+    this.db.ref(`/posts/${id}/title`).set(title);
   }
 
   likePost(store, postId) {

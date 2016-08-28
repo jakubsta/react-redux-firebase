@@ -24,7 +24,7 @@ export default class PostTableRow extends Component {
   }
 
   render() {
-    const { post, user, likePost } = this.props;
+    const { post, user, likePost, editPost } = this.props;
     return (
       <TableRow className={user.email === post.email ? 'my-post' : ''}>
         {this.renderColumns(post)}
@@ -33,7 +33,9 @@ export default class PostTableRow extends Component {
             up={!path(['likes', user.uid], post)}
             onClick={likePost.bind(this, post.id)}
           />
-          <EditButton />
+          <EditButton
+            onClick={editPost.bind(this, post)}
+          />
         </TableRowColumn>
       </TableRow>
     );
@@ -44,5 +46,6 @@ PostTableRow.propTypes = {
   post: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   likePost: PropTypes.func.isRequired,
+  editPost: PropTypes.func.isRequired,
   columnsNames: PropTypes.array.isRequired,
 };

@@ -9,6 +9,7 @@ import TableOptions from './TableOptions';
 import UserPanel from './UserPanel';
 import PostTable from './PostTable';
 import PostAdder from './PostAdder';
+import Edit from './Edit';
 
 function App(props) {
   if (props.user !== null) {
@@ -19,6 +20,7 @@ function App(props) {
           <PostAdder />
           <TableOptions />
           <PostTable />
+          <Edit />
         </Paper>
       </div>
     );
